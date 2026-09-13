@@ -44,6 +44,12 @@ pages = {
 }
 
 nav_labels = list(pages.keys())
+requested_page = st.query_params.get("page", "home")
+if requested_page in pages.values():
+    requested_label = next(label for label, key in pages.items() if key == requested_page)
+    if st.session_state.get("page_nav") != requested_label:
+        st.session_state.page_nav = requested_label
+
 selected = st.sidebar.radio(
     "Navigation",
     nav_labels,
@@ -51,6 +57,8 @@ selected = st.sidebar.radio(
     key="page_nav",
 )
 page_key = pages[selected]
+if st.query_params.get("page") != page_key:
+    st.query_params["page"] = page_key
 
 # Dataset status badge in sidebar
 st.sidebar.divider()
