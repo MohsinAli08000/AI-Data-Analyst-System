@@ -1,0 +1,9 @@
+streamlit>=1.35.0
+pandas>=2.0.0
+numpy>=1.26.0
+plotly>=5.20.0
+openpyxl>=3.1.0
+xlrd>=2.0.1
+openai>=1.30.0
+reportlab>=4.1.0
+kaleido>=0.2.1
