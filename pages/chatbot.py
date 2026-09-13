@@ -3,6 +3,8 @@ pages/chatbot.py — Advanced AI Chatbot with OpenAI GPT Integration
 Users ask questions about their data in natural language
 """
 
+import os
+
 import streamlit as st
 import pandas as pd
 from utils.ai_engine import chat_with_data
@@ -30,7 +32,7 @@ def render():
     df = st.session_state.df
 
     # ── API Key ───────────────────────────────────────────────────────────────
-    api_key = st.session_state.get("openai_key", "")
+    api_key = _get_api_key()
     if not api_key:
         api_key = st.text_input(
             "🔑 OpenAI API Key",
@@ -81,6 +83,20 @@ def render():
     if st.button("➡️ Next: PDF Report", use_container_width=True):
         st.session_state.page_nav = "📄 PDF Report"
         st.experimental_rerun()
+
+
+def _get_api_key() -> str:
+    """Load the API key from session state, Streamlit secrets, or the environment."""
+    api_key = st.session_state.get("openai_key", "")
+    if api_key:
+        return api_key
+
+    try:
+        api_key = st.secrets.get("OPENAI_API_KEY", "")
+    except FileNotFoundError:
+        api_key = ""
+
+    return api_key or os.getenv("OPENAI_API_KEY", "")
 
 
 def _send_message(user_msg: str, df: pd.DataFrame, api_key: str):
